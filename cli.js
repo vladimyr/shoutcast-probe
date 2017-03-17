@@ -12,12 +12,12 @@ if (!reProto.test(url)) url = `http://${ url }`;
 
 fetchStreamInfo(url, (err, info) => {
   if (err) {
-    console.error(err.message);
-    return;
+    console.error('%s %s', chalk.red.bold('Error:'), err.message);
+    process.exit(1);
   }
 
   let title = info['Stream Title'] || info['Stream Name'];
-  if (title) console.log('%s\n', chalk.bold.yellow(title));
+  if (title) console.log('# %s\n', chalk.bold.yellow(title));
 
   Object.keys(info).forEach(key => {
     let value = info[key];

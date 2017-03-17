@@ -10,13 +10,13 @@ module.exports = fetchStreamInfo;
 
 function fetchStreamInfo(streamUrl, cb=noop) {
   let headers = { 'User-Agent': ua };
-  request.get(streamUrl, { headers }, (err, { body: html }) => {
+  request.get(streamUrl, { headers }, (err, resp) => {
     if (err) {
       cb(err);
       return;
     }
 
-    let $doc = minidom(html);
+    let $doc = minidom(resp.body);
     let info = parseStatusPage($doc);
     cb(null, info);
   });
