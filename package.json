@@ -1,0 +1,19 @@
+{
+  "name": "shoutcast-probe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "stream-info": "./cli.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "minidom": "^1.0.0",
+    "request": "^2.81.0"
+  }
+}
