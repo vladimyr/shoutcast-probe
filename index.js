@@ -10,13 +10,13 @@ module.exports = fetchStreamInfo;
 
 function fetchStreamInfo(streamUrl, cb=noop) {
   let headers = { 'User-Agent': ua };
-  request.get(streamUrl, { headers }, (err, resp) => {
+  request.get(streamUrl, { headers }, (err, { body: html }={}) => {
     if (err) {
       cb(err);
       return;
     }
 
-    let $doc = minidom(resp.body);
+    let $doc = minidom(html);
     let info = parseStatusPage($doc);
     cb(null, info);
   });
@@ -26,10 +26,11 @@ function parseStatusPage($doc) {
   let $tables = $doc.getElementsByTagName('table');
   let $content = [].filter.call($tables, $it => $it.getAttribute('align') === 'center')[0];
   let $lines = $content.getElementsByTagName('tr');
-  let data = {};
+  let info = {};
   [].forEach.call($lines, $line => {
     let [prop, ...value] = $line.textContent.trim().split(/:\s+/);
-  	data[prop] = value.join('');
+  	info[prop] = value.join('');
 	});
-  return data;
+  let server = $doc.getElementsByTagName('a')[0].textContent;
+  return { server, info };
 }
