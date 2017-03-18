@@ -6,12 +6,13 @@ const { parseIcecastPage, parseShoutcastPage } = require('./parser.js');
 const noop = Function.prototype;
 
 const ua = 'Mozilla/5.0';
+const timeout = 5000; // ms
 
 module.exports = fetchStreamInfo;
 
 function fetchStreamInfo(streamUrl, cb=noop) {
   let headers = { 'User-Agent': ua };
-  request.get(streamUrl, { headers }, (err, { body: html }={}) => {
+  request.get(streamUrl, { headers, timeout }, (err, { body: html }={}) => {
     if (err) {
       cb(err);
       return;
@@ -27,7 +28,7 @@ function fetchStreamInfo(streamUrl, cb=noop) {
     } else if (serverName === 'shoutcast') {
       info = parseShoutcastPage($doc);
     } else {
-      cb(new Error('Unsupported html received!'));
+      cb(new Error('Unsupported html received'));
       return;
     }
 
