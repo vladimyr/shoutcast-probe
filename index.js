@@ -2,6 +2,7 @@
 
 const request = require('request');
 const minidom = require('minidom');
+const { parseIcecastPage, parseShoutcastPage } = require('./parser.js');
 const noop = Function.prototype;
 
 const ua = 'Mozilla/5.0';
@@ -17,20 +18,23 @@ function fetchStreamInfo(streamUrl, cb=noop) {
     }
 
     let $doc = minidom(html);
-    let info = parseStatusPage($doc);
+    let title = getTitle($doc).toLowerCase();
+    let [ serverName ] = title.split(/\s+/g);
+
+    let info;
+    if (serverName === 'icecast') {
+      info = parseIcecastPage($doc);
+    } else if (serverName === 'shoutcast') {
+      info = parseShoutcastPage($doc);
+    } else {
+      cb(new Error('Unsupported html received!'));
+      return;
+    }
+
     cb(null, info);
   });
 }
 
-function parseStatusPage($doc) {
-  let $tables = $doc.getElementsByTagName('table');
-  let $content = [].filter.call($tables, $it => $it.getAttribute('align') === 'center')[0];
-  let $lines = $content.getElementsByTagName('tr');
-  let info = {};
-  [].forEach.call($lines, $line => {
-    let [prop, ...value] = $line.textContent.trim().split(/:\s+/);
-  	info[prop] = value.join('');
-	});
-  let server = $doc.getElementsByTagName('a')[0].textContent;
-  return { server, info };
+function getTitle($doc) {
+  return $doc.getElementsByTagName('title')[0].textContent.trim();
 }
