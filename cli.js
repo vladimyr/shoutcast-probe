@@ -11,14 +11,14 @@ let [ url ] = argv._;
 const reProto = /^https?:\/\//;
 if (!reProto.test(url)) url = `http://${ url }`;
 
-fetchStreamInfo(url, (err, { server, info }={}) => {
+fetchStreamInfo(url, (err, { server, url, info }={}) => {
   if (err) {
     console.error('%s %s', chalk.red.bold('Error:'), err.message);
     process.exit(1);
   }
 
   if (argv.j || argv.json) {
-    console.log(JSON.stringify({ server, info }));
+    console.log(JSON.stringify({ server, url, info }));
     return;
   }
 

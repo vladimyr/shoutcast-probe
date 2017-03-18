@@ -31,6 +31,7 @@ function fetchStreamInfo(streamUrl, cb=noop) {
       return;
     }
 
+    info.url = streamUrl;
     cb(null, info);
   });
 }
