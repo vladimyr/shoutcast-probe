@@ -22,15 +22,21 @@ whilst(
 
 function processStream(stream, cb) {
   fetchStreamInfo(stream, (err, data = {}) => {
-    if (err) {
-      const message = `Failed to fetch stream info for ${stream}`;
-      console.error(chalk.red.bold('Error:'), message, err.message);
-      cb();
-      return;
+    if (!err) {
+      const { server, url, info } = data;
+      console.log(JSON.stringify({ server, url, info }));
+      return cb();
     }
 
-    const { server, url, info } = data;
-    console.log(JSON.stringify({ server, url, info }));
+    // Ignore network errors.
+    if (
+      err.code === 'ECONNRESET' ||
+      err.code === 'ECONNREFUSED' ||
+      err.code === 'ESOCKETTIMEDOUT'
+    ) return cb();
+
+    const message = `Failed to fetch stream info for ${stream}`;
+    console.error(chalk.red.bold('Error:'), message, err.message);
     cb();
   });
 }

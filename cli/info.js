@@ -9,7 +9,8 @@ const url = toUrl(argv._[0]);
 
 fetchStreamInfo(url, (err, { server, url, info } = {}) => {
   if (err) {
-    console.error('%s %s', chalk.red.bold('Error:'), err.message);
+    const { message } = processError(err);
+    console.error('%s %s', chalk.red.bold('Error:'), message);
     process.exit(1);
   }
 
@@ -28,6 +29,16 @@ fetchStreamInfo(url, (err, { server, url, info } = {}) => {
     console.log('%s %s', chalk.blue(`${key}:`), value);
   });
 });
+
+function processError(err) {
+  // Ignore network errors.
+  if (
+    err.code === 'ECONNRESET' ||
+    err.code === 'ECONNREFUSED' ||
+    err.code === 'ESOCKETTIMEDOUT'
+  ) return new Error('Requested url is not stream url');
+  return err;
+}
 
 function toUrl(str) {
   if (!str) return str;

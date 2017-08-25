@@ -39,5 +39,6 @@ function fetchStreamInfo(streamUrl, cb = noop) {
 }
 
 function getTitle($doc) {
-  return $doc.getElementsByTagName('title')[0].textContent.trim();
+  const $title = $doc.getElementsByTagName('title')[0];
+  return $title ? $title.textContent.trim() : '';
 }
