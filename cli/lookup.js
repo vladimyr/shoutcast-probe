@@ -7,6 +7,7 @@ const {
 } = require('minimist')(process.argv.slice(2));
 const chalk = require('chalk');
 const whilst = require('async/whilst');
+const { isNetworkError } = require('../error');
 const fetchStreamInfo = require('../index');
 
 const host = toUrl(server);
@@ -29,11 +30,7 @@ function processStream(stream, cb) {
     }
 
     // Ignore network errors.
-    if (
-      err.code === 'ECONNRESET' ||
-      err.code === 'ECONNREFUSED' ||
-      err.code === 'ESOCKETTIMEDOUT'
-    ) return cb();
+    if (isNetworkError(err)) return cb();
 
     const message = `Failed to fetch stream info for ${stream}`;
     console.error(chalk.red.bold('Error:'), message, err.message);

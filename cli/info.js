@@ -4,6 +4,7 @@
 
 const chalk = require('chalk');
 const fetchStreamInfo = require('../index');
+const { isNetworkError } = require('../error');
 const argv = require('minimist')(process.argv.slice(2));
 const url = toUrl(argv._[0]);
 
@@ -31,13 +32,8 @@ fetchStreamInfo(url, (err, { server, url, info } = {}) => {
 });
 
 function processError(err) {
-  // Ignore network errors.
-  if (
-    err.code === 'ECONNRESET' ||
-    err.code === 'ECONNREFUSED' ||
-    err.code === 'ESOCKETTIMEDOUT'
-  ) return new Error('Requested url is not stream url');
-  return err;
+  if (!isNetworkError(err)) return err;
+  return new Error('Requested url is not stream url');
 }
 
 function toUrl(str) {
