@@ -9,4 +9,5 @@ node_modules/
 .DS_Store
 .DS_Store?
 
+*.jsonl
 npm-debug.log

@@ -10,17 +10,18 @@ const timeout = 5000; // ms
 
 module.exports = fetchStreamInfo;
 
-function fetchStreamInfo(streamUrl, cb=noop) {
-  let headers = { 'User-Agent': ua };
-  request.get(streamUrl, { headers, timeout }, (err, { body: html }={}) => {
+function fetchStreamInfo(streamUrl, cb = noop) {
+  const headers = { 'User-Agent': ua };
+  const options = { headers, timeout };
+  request.get(streamUrl, options, (err, { body: html } = {}) => {
     if (err) {
       cb(err);
       return;
     }
 
-    let $doc = minidom(html);
-    let title = getTitle($doc).toLowerCase();
-    let [ serverName ] = title.split(/\s+/g);
+    const $doc = minidom(html);
+    const title = getTitle($doc).toLowerCase();
+    const [ serverName ] = title.split(/\s+/g);
 
     let info;
     if (serverName === 'icecast') {
