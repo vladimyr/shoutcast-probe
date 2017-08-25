@@ -3,7 +3,7 @@
 'use strict';
 
 const chalk = require('chalk');
-const fetchStreamInfo = require('./index.js');
+const fetchStreamInfo = require('../index');
 const argv = require('minimist')(process.argv.slice(2));
 const url = toUrl(argv._[0]);
 
@@ -32,5 +32,5 @@ fetchStreamInfo(url, (err, { server, url, info } = {}) => {
 function toUrl(str) {
   if (!str) return str;
   const reHttp = /^https?:\/\//;
-  return !reHttp.test(url) ? `http://${url}` : url;
+  return !reHttp.test(str) ? `http://${str}` : str;
 }

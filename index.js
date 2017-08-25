@@ -2,7 +2,7 @@
 
 const request = require('request');
 const minidom = require('minidom');
-const { parseIcecastPage, parseShoutcastPage } = require('./parser.js');
+const { parseIcecastPage, parseShoutcastPage } = require('./parser');
 const noop = Function.prototype;
 
 const ua = 'Mozilla/5.0';
